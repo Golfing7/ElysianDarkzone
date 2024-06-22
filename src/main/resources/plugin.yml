@@ -1,0 +1,8 @@
+name: ElysianDarkzone
+author: Golfing8
+version: 1.0
+api-version: 1.8
+main: com.golfing8.darkzone.ElysianDarkzone
+description: 'Darkzone plugin built for ElysianPVP'
+depend:
+  - KCommon
