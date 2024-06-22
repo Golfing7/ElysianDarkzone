@@ -2,6 +2,7 @@ package com.golfing8.darkzone.module.sub
 
 import com.golfing8.darkzone.ElysianDarkzone
 import com.golfing8.darkzone.module.DarkzoneModule
+import com.golfing8.darkzone.module.event.CustomMobKillEvent
 import com.golfing8.kcommon.config.generator.Conf
 import com.golfing8.kcommon.module.SubModule
 import com.golfing8.kcommon.struct.drop.DropTable
@@ -13,10 +14,9 @@ import org.bukkit.entity.LivingEntity
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.persistence.PersistentDataType
-import kotlin.contracts.ExperimentalContracts
-import kotlin.contracts.contract
 
 val customEntityKey = NamespacedKey(ElysianDarkzone.INSTANCE, "elysian_darkzone_entity")
+val bossEntityKey = NamespacedKey(ElysianDarkzone.INSTANCE, "elysian_darkzone_boss")
 
 /**
  * Sub module for handling all things related to entities.
@@ -48,6 +48,14 @@ object EntitySubModule : SubModule<DarkzoneModule>() {
         return entity.persistentDataContainer.has(customEntityKey, PersistentDataType.STRING)
     }
 
+    fun isMob(entity: Entity): Boolean {
+        return isCustomEntity(entity) && !isBoss(entity)
+    }
+
+    fun isBoss(entity: Entity): Boolean {
+        return entity.persistentDataContainer.has(bossEntityKey, PersistentDataType.STRING)
+    }
+
     /**
      * Tries to naturally spawn an entity at the given location.
      *
@@ -63,10 +71,14 @@ object EntitySubModule : SubModule<DarkzoneModule>() {
 
     @EventHandler
     fun onEntityDie(event: EntityDeathEvent) {
-        val killer = event.entity.killer ?: return
         if (!isCustomEntity(event.entity))
             return
 
+        val entityType = entities[event.entity.persistentDataContainer.get(customEntityKey, PersistentDataType.STRING)] ?: return
+        val deathEvent = CustomMobKillEvent(entityType, event.entity)
+        deathEvent.callEvent()
 
+        event.drops.clear()
+        entityType.dropTable!!.giveOrDropAt(deathEvent.dropContext, event.entity.location)
     }
 }
