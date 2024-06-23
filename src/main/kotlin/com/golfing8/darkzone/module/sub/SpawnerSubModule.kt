@@ -104,7 +104,7 @@ object SpawnerSubModule : SubModule<DarkzoneModule>() {
 
         // Count all nearby entities
         val nearbyEntities = event.spawner.location.world.getNearbyEntities(event.spawner.location, customSpawner.nearbyRange, customSpawner.nearbyRange, customSpawner.nearbyRange).count {
-            EntitySubModule.isCustomEntity(it)
+            EntitySubModule.isMob(it)
         }
 
         if (nearbyEntities >= customSpawner.maxOfTypeNearby) {

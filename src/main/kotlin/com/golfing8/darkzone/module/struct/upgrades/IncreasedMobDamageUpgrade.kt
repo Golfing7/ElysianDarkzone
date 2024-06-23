@@ -5,6 +5,6 @@ import org.bukkit.entity.LivingEntity
 
 class IncreasedMobDamageUpgrade(type: UpgradeType) : IncreasedDamageUpgrade(type) {
     override fun worksOn(entity: LivingEntity): Boolean {
-        return EntitySubModule.isCustomEntity(entity) && !EntitySubModule.isBoss(entity)
+        return EntitySubModule.isMob(entity)
     }
 }

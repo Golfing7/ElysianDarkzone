@@ -52,7 +52,7 @@ class AOEDamageUpgrade(type: UpgradeType) : Upgrade(type) {
 
         // Find all nearby entities and damage them!
         for (entity in event.entity.getNearbyEntities(range, range, range)) {
-            if (entity !is LivingEntity || (!applyToEverything && !EntitySubModule.isCustomEntity(entity)))
+            if (entity !is LivingEntity || (!applyToEverything && !EntitySubModule.isMob(entity) && !EntitySubModule.isBoss(entity)))
                 continue
 
             eventEnabled = false
