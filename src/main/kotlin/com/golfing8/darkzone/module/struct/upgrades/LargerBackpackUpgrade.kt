@@ -30,7 +30,10 @@ class LargerBackpackUpgrade(type: UpgradeType) : Upgrade(type) {
      * @return the amount of items the player can store in their backpack.
      */
     fun getBackpackSize(player: Player): Int {
-        val level = getLevel(player)
+        return getLevel(player)
+    }
+
+    fun getBackpackSize(level: Int): Int {
         return backpackSize[level.toDouble()]!!.b.toInt()
     }
 }

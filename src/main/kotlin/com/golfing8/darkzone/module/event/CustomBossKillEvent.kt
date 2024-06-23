@@ -12,13 +12,11 @@ import org.bukkit.event.entity.EntityEvent
 /**
  * Called when a custom boss is killed
  */
-class CustomBossKillEvent(val mob: DarkzoneBossWrapper, entity: LivingEntity) : EntityEvent(entity) {
+class CustomBossKillEvent(mob: DarkzoneBossWrapper) : EntityEvent(mob.entity) {
     companion object {
         @JvmStatic
         val handlerList = HandlerList()
     }
-
-    var dropContext: DropContext = DropContext.DEFAULT
 
     override fun getEntity(): LivingEntity {
         return super.getEntity() as LivingEntity

@@ -24,3 +24,9 @@ levels:
   'level-4':
     xp-required: 10000
     display-name: 'Void Master'
+
+# Use the same keys here from the drop-tables section in entities.yml
+item-worths:
+  'enderpearl':
+    vault-currency: 500.0
+    darkzone-currency: 10

@@ -88,11 +88,8 @@ object EntitySubModule : SubModule<DarkzoneModule>() {
             return
 
         val bossWrapper = getLivingBosses()[event.entity] ?: return
-        val deathEvent = CustomBossKillEvent(bossWrapper, event.entity)
-        deathEvent.callEvent()
 
         event.drops.clear()
-        bossWrapper.bossData.entityDefinition.dropTable!!.giveOrDropAt(event.entity.killer, event.entity.location)
         bossWrapper.onBossDeath(event.entity.killer)
     }
 
@@ -101,25 +98,8 @@ object EntitySubModule : SubModule<DarkzoneModule>() {
         if (!isMob(event.entity))
             return
 
-        val entityType = entities[event.entity.persistentDataContainer.get(customEntityKey, PersistentDataType.STRING)] ?: return
-        val deathEvent = CustomMobKillEvent(entityType, event.entity)
-        deathEvent.callEvent()
-
         event.drops.clear()
-        entityType.entityDefinition.dropTable!!.giveOrDropAt(deathEvent.dropContext, event.entity.location)
-
-        if (event.entity.killer == null)
-            return
-
-        // Should we handle like a normal entity or just like a boss?
-        val bosses = getLivingBosses()
-        if (!bosses.containsKey(event.entity)) {
-            val playerData = DarkzoneModule.getOrCreate(event.entity.killer.uniqueId, PlayerDarkzoneData::class.java)
-            playerData.grantXP(entityType.xpPerKill.toLong())
-            bosses[event.entity]!!.onBossDeath(event.entity.killer)
-        } else {
-            val playerData = DarkzoneModule.getOrCreate(event.entity.killer.uniqueId, PlayerDarkzoneData::class.java)
-            playerData.grantXP(entityType.xpPerKill.toLong())
-        }
+        val entityType = entities[event.entity.persistentDataContainer.get(customEntityKey, PersistentDataType.STRING)] ?: return
+        entityType.handleDeath(event.entity)
     }
 }
