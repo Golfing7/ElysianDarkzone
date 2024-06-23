@@ -1,0 +1,21 @@
+INCREASED_BOSS_DAMAGE:
+  display-name: '&cIncreased Boss Damage'
+
+REDUCED_MOB_DAMAGE:
+  display-name: '&aReduced Mob Damage'
+
+INCREASED_MOB_DAMAGE:
+  display-name: '&cIncreased Mob Damage'
+
+MORE_LOOT:
+  display-name: '&eLooter'
+
+LARGER_BACKPACK:
+  display-name: '&dLarger Backpack'
+
+AOE_DAMAGE:
+  display-name: '&6AOE Damage'
+  level-required: 4
+
+AUTO_SELL:
+  display-name: '&2Auto Sell'

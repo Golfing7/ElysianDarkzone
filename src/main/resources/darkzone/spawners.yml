@@ -1,0 +1,5 @@
+darkzone-spawners:
+  'enderman-1':
+    ticks-per-spawn: '200;800'
+    max-of-type-nearby: 8
+    nearby-range: 32.0

@@ -12,7 +12,7 @@ class AutoSellUpgrade(type: UpgradeType) : Upgrade(type) {
 
         DarkzoneModule.addTask {
             for (player in Bukkit.getOnlinePlayers()) {
-                //
+                // TODO Implement selling
             }
         }.startTimer(0L, 20L)
     }

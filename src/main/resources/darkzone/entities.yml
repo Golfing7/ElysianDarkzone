@@ -1,0 +1,42 @@
+drop-tables:
+  enderman-simple:
+    drop-target-range: '0;1'
+    table:
+      'enderpearl':
+        chance: 50
+        item:
+          type: ENDERPEARL
+          variable-amount: '0;3'
+
+entities:
+  'enderman-1':
+    xp-per-kill: 5
+    entity-definition:
+      type: ENDERMAN
+      name: '&0&lEnderman &8- &6Lvl. 1'
+      max-health: 100.0
+      spawn-health: 100.0
+      drop-table: 'drop-tables.enderman-simple'
+  'enderman-2':
+    xp-per-kill: 10
+    entity-definition:
+      type: ENDERMAN
+      name: '&0&lEnderman &8- &6Lvl. 2'
+      max-health: 150.0
+      spawn-health: 150.0
+      drop-table: 'drop-tables.enderman-simple'
+  'enderman-3':
+    xp-per-kill: 20
+    entity-definition:
+      type: ENDERMAN
+      name: '&0&lEnderman &8- &6Lvl. 3'
+      max-health: 250.0
+      spawn-health: 150.0
+      drop-table: 'drop-tables.enderman-simple'
+
+bosses:
+  'enderman-boss':
+    xp-per-kill: 500
+    entity-definition:
+
+

@@ -1,0 +1,26 @@
+regions:
+  standard:
+    level-requirement: 0
+    region:
+      type: CUBOID
+      world: darkzone
+      min-x: -500
+      max-x: 500
+      min-y: 0
+      max-y: 256
+      min-z: -500
+      max-z: 500
+
+levels:
+  'level-1':
+    xp-required: 0
+    display-name: 'Adventurer'
+  'level-2':
+    xp-required: 1000
+    display-name: 'Ender'
+  'level-3':
+    xp-required: 2500
+    display-name: 'Dark Teleporter'
+  'level-4':
+    xp-required: 10000
+    display-name: 'Void Master'

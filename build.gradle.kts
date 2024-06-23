@@ -2,6 +2,7 @@ plugins {
     kotlin("jvm") version "1.9.23"
 }
 
+val deployDirectory = "C:\\Users\\Miner\\DoomPvP\\plugins"
 group = "com.golfing8"
 version = "1.0"
 
@@ -23,4 +24,15 @@ tasks.test {
 }
 kotlin {
     jvmToolchain(8)
+}
+
+tasks.create("deploy") {
+    dependsOn(tasks.jar)
+
+    doFirst {
+        val outputFile = tasks.getByName("jar").outputs.files.first()
+        val targetFile = File(deployDirectory, "${project.name}-${project.version}.jar")
+
+        outputFile.copyTo(targetFile, overwrite = true)
+    }
 }

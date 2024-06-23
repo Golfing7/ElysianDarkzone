@@ -1,5 +1,6 @@
 package com.golfing8.darkzone.module.event
 
+import com.golfing8.darkzone.module.struct.DarkzoneBossWrapper
 import com.golfing8.darkzone.module.struct.DarkzoneMob
 import com.golfing8.kcommon.struct.drop.DropContext
 import com.golfing8.kcommon.struct.entity.EntityDefinition
@@ -9,9 +10,9 @@ import org.bukkit.event.HandlerList
 import org.bukkit.event.entity.EntityEvent
 
 /**
- * Called when a custom entity is killed
+ * Called when a custom boss is killed
  */
-class CustomMobKillEvent(val mob: DarkzoneMob, entity: LivingEntity) : EntityEvent(entity) {
+class CustomBossKillEvent(val mob: DarkzoneBossWrapper, entity: LivingEntity) : EntityEvent(entity) {
     companion object {
         @JvmStatic
         val handlerList = HandlerList()

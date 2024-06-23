@@ -28,7 +28,7 @@ abstract class IncreasedDamageUpgrade(type: UpgradeType) : Upgrade(type) {
     }
 
     private fun handleEntityDamage(listener: Listener, rawEvent: Event) {
-        val event = rawEvent as EntityDamageByEntityEvent
+        val event = rawEvent as? EntityDamageByEntityEvent ?: return
 
         val livingEntity = event.entity as? LivingEntity ?: return
         val attacker = event.damager as? Player ?: return
