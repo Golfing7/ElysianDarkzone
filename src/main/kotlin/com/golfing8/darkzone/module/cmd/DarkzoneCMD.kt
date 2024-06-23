@@ -14,5 +14,8 @@ import com.golfing8.kcommon.command.MCommand
 class DarkzoneCMD : MCommand<DarkzoneModule>() {
     override fun onRegister() {
         addSubCommand(DarkzoneGiveSpawnerCMD())
+        addSubCommand(DarkzoneBackpackCMD(DarkzoneModule.backpackCommandName))
+        addSubCommand(DarkzoneBackpackNPCCMD(DarkzoneModule.backpackCommandName))
+        addSubCommand(DarkzoneMainMenuCMD())
     }
 }

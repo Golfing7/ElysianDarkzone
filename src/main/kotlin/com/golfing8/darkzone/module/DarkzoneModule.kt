@@ -4,7 +4,7 @@ import com.golfing8.darkzone.module.cmd.DarkzoneCMD
 import com.golfing8.darkzone.module.data.PlayerDarkzoneData
 import com.golfing8.darkzone.module.struct.DarkzoneLevel
 import com.golfing8.darkzone.module.struct.CurrencyContainer
-import com.golfing8.darkzone.module.struct.region.DarkzoneRegion
+import com.golfing8.darkzone.module.struct.DarkzoneRegion
 import com.golfing8.darkzone.module.struct.upgrades.UpgradeType
 import com.golfing8.darkzone.module.sub.EntitySubModule
 import com.golfing8.darkzone.module.sub.SpawnerSubModule
@@ -18,12 +18,18 @@ import com.golfing8.kcommon.struct.drop.CommandDrop
 import com.golfing8.kcommon.struct.drop.DropContext
 import com.golfing8.kcommon.struct.drop.DropTable
 import com.golfing8.kcommon.struct.drop.ItemDrop
+import com.golfing8.kcommon.struct.time.Schedule
+import com.golfing8.kcommon.struct.time.ScheduleTask
+import com.golfing8.kcommon.struct.time.Timestamp
+import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
+import org.bukkit.event.player.PlayerMoveEvent
 import org.bukkit.event.world.ChunkUnloadEvent
 import org.bukkit.util.Vector
 import java.util.TreeMap
+import kotlin.contracts.contract
 
 @ModuleInfo(
     name = "darkzone"
@@ -45,17 +51,45 @@ object DarkzoneModule : Module(), DataManagerContainer {
     @Conf
     private var keepRegionChunksLoaded = true
 
+    @Conf
+    private var bossSpawnSchedule = Schedule(listOf(
+        Timestamp.ofIntraDay(0, 0, 0),
+        Timestamp.ofIntraDay(3, 0, 0),
+        Timestamp.ofIntraDay(6, 0, 0),
+        Timestamp.ofIntraDay(9, 0, 0),
+        Timestamp.ofIntraDay(12, 0, 0),
+        Timestamp.ofIntraDay(15, 0, 0),
+        Timestamp.ofIntraDay(18, 0, 0),
+        Timestamp.ofIntraDay(21, 0, 0),
+    ))
+
+    @Conf
+    var backpackCommandName = "voidstorage"
+        private set
+
     @LangConf
     var upgradeLevelTooLowMsg = Message("&cYour level is too low to purchase that upgrade! It requires level &e{LEVEL}&c!")
+        private set
     @LangConf
     var cantAffordUpgradeMsg = Message("&cYou can't afford this upgrade. It costs &e{COST}&a!")
+        private set
     @LangConf
     var boughtUpgradeMsg = Message("&aUpgraded &e{UPGRADE} &afor &e{COST} &adracma!")
+        private set
 
     @LangConf
     var levelUpMsg = Message("&aLeveled up from {OLD_LEVEL} &ato {NEW_LEVEL}&a!")
+        private set
     @LangConf
-    var dropsLostMsg = Message("&c{AMOUNT_LOST} drops were lost as they couldn't be fit into your &1&lVoid Storage&c.")
+    private var dropsLostMsg = Message("&c{AMOUNT_LOST} drops were lost as they couldn't be fit into your &1&lVoid Storage&c.")
+
+    @LangConf
+    private var bossesWillSpawnMsg = Message("&aBosses will spawn in the darkzone in &e{TIME}&a!")
+    @LangConf
+    private var bossesSpawnedMsg = Message("&aBosses have spawned in the darkzone!")
+
+    @LangConf
+    private var cantMoveIntoRegionMsg = Message("&cYou can't enter that region until level &e{LEVEL}&c!")
 
     override fun onEnable() {
         addDataManager("darkzone-data", PlayerDarkzoneData::class.java)
@@ -71,6 +105,7 @@ object DarkzoneModule : Module(), DataManagerContainer {
 
         UpgradeType.startup()
 
+        // Initialize the levels
         levelsByXP = TreeMap()
         levels.forEach {
             levelsByXP[it.value.xpRequired] = it.value
@@ -80,6 +115,24 @@ object DarkzoneModule : Module(), DataManagerContainer {
         levelsByXP.forEach {
             it.value.level = level++
         }
+
+        // Startup the boss spawning task
+        val scheduleTask = ScheduleTask(bossSpawnSchedule) { _ ->
+            for (region in regions.values) {
+                region.spawnBoss()
+            }
+            for (player in Bukkit.getOnlinePlayers()) {
+                bossesSpawnedMsg.send(player)
+            }
+        }
+        scheduleTask.setAnticipateTask {
+            for (player in Bukkit.getOnlinePlayers()) {
+                bossesWillSpawnMsg.send(player, "TIME", it.toString())
+            }
+        }
+
+        scheduleTask.start()
+        addTask(scheduleTask)
     }
 
     override fun onDisable() {
@@ -90,6 +143,22 @@ object DarkzoneModule : Module(), DataManagerContainer {
     fun onChunkUnload(event: ChunkUnloadEvent) {
         if (this.keepRegionChunksLoaded && this.regions.values.any { it.region.isPositionWithin(Vector(event.chunk.x shl 4, 0, event.chunk.z shl 4)) })
             event.isCancelled = true
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    fun onPlayerMove(event: PlayerMoveEvent) {
+        // Ignore same-block movement.
+        if (event.to.blockX == event.from.blockX &&
+            event.to.blockY == event.from.blockY &&
+            event.to.blockZ == event.from.blockZ)
+            return
+
+        val destinationRegion = getDarkzoneRegion(event.to) ?: return
+        val playerData = getOrCreate(event.player.uniqueId, PlayerDarkzoneData::class.java)
+        if (playerData.getLevel().level < destinationRegion.levelRequirement) {
+            event.isCancelled = true
+            cantMoveIntoRegionMsg.send(event.player, "LEVEL", destinationRegion.levelRequirement)
+        }
     }
 
     /**

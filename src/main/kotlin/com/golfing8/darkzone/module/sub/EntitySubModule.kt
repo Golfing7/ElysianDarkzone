@@ -49,11 +49,12 @@ object EntitySubModule : SubModule<DarkzoneModule>() {
         return entity.persistentDataContainer.get(customEntityKey, PersistentDataType.STRING)
     }
 
-    fun getCustomBossType(entity: Entity): String? {
-        if (!entity.persistentDataContainer.has(bossEntityKey, PersistentDataType.STRING))
+    fun getCustomBoss(entity: Entity): DarkzoneBossWrapper? {
+        val bosses = getLivingBosses()
+        if (!bosses.containsKey(entity))
             return null
 
-        return entity.persistentDataContainer.get(bossEntityKey, PersistentDataType.STRING)
+        return bosses[entity]
     }
 
     fun isMob(entity: Entity): Boolean {
@@ -62,6 +63,20 @@ object EntitySubModule : SubModule<DarkzoneModule>() {
 
     fun isBoss(entity: Entity): Boolean {
         return entity.persistentDataContainer.has(bossEntityKey, PersistentDataType.STRING)
+    }
+
+    /**
+     * Spawns a boss at the given location.
+     *
+     * @param location the location of the spawned boss.
+     * @param boss the type of boss to spawn
+     * @return the spawned boss
+     */
+    fun spawnBoss(location: Location, boss: DarkzoneBoss): DarkzoneBossWrapper {
+        val spawned = boss.entityDefinition.spawnEntity(location)
+        val wrapper = DarkzoneBossWrapper(boss, spawned as LivingEntity)
+        livingBosses[spawned] = wrapper
+        return wrapper
     }
 
     /**

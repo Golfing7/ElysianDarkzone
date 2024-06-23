@@ -1,4 +1,35 @@
 upgrade-menu:
   size: 27
   title: '&6&lDarkzone Upgrades'
-  locked-upgrade-
+
+backpack-menu:
+  size: 36
+  title: '&1&lVoid Storage'
+  special-slots:
+    sell:
+      slot: 31
+      type: GOLD_INGOT
+      name: '&6&lSell All'
+    'enderpearl':
+      slot: 10
+      type: ENDER_PEARL
+      lore:
+        - '&7A simple enderpearl, dropped by most enderman.'
+        - '&eAmount: &f{TOTAL}'
+
+main-menu:
+  type: HOPPER
+  title: '&1Void Merchant'
+  special-slots:
+    backpack-menu:
+      slot: 1
+      type: END_PORTAL_FRAME
+      name: '&1Void Storage'
+      lore:
+        - '&7Click to open and sell your void storage!'
+    upgrade-menu:
+      slot: 3
+      type: ENDER_CHEST
+      name: '&3Darkzone Upgrades'
+      lore:
+        - '&7Click to open the darkzone upgrade menu!'
