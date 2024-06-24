@@ -10,6 +10,7 @@ import org.bukkit.entity.Player
 
 class DarkzoneBackpackCMD(commandName: String) : MCommand<DarkzoneModule>(DarkzoneModule, commandName, emptyList(), true) {
     override fun onRegister() {
+        description = "Open your backpack"
         addArgument("player", CommandArguments.PLAYER, CommandSender::getName)
     }
 

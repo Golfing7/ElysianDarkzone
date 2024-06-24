@@ -6,6 +6,7 @@ import com.golfing8.kcommon.command.Cmd
 import com.golfing8.kcommon.command.CommandContext
 import com.golfing8.kcommon.command.MCommand
 import com.golfing8.kcommon.command.argument.CommandArguments
+import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 
 /**
@@ -22,7 +23,7 @@ class DarkzoneMainMenuCMD : MCommand<DarkzoneModule>() {
 
     override fun execute(context: CommandContext) {
         val player = if (checkPermissionExtension(context.sender, "other"))
-            context.next()
+            Bukkit.getPlayer(context.arguments[0])
         else
             context.player
 

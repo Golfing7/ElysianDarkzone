@@ -5,7 +5,8 @@ drop-tables:
       'enderpearl':
         chance: 50
         item:
-          type: ENDERPEARL
+          # The type here doesn't actually matter a ton.
+          type: ENDER_PEARL
           variable-amount: '1;3'
 
 entities:

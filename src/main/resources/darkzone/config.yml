@@ -2,12 +2,10 @@ regions:
   standard:
     level-requirement: 0
     region:
-      type: CUBOID
+      region-type: RECTANGLE
       world: darkzone
       min-x: -500
       max-x: 500
-      min-y: 0
-      max-y: 256
       min-z: -500
       max-z: 500
 

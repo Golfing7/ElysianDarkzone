@@ -17,5 +17,7 @@ class DarkzoneCMD : MCommand<DarkzoneModule>() {
         addSubCommand(DarkzoneBackpackCMD(DarkzoneModule.backpackCommandName))
         addSubCommand(DarkzoneBackpackNPCCMD(DarkzoneModule.backpackCommandName))
         addSubCommand(DarkzoneMainMenuCMD())
+        addSubCommand(DarkzoneLevelCMD())
+        addSubCommand(DarkzoneSetXPCMD())
     }
 }

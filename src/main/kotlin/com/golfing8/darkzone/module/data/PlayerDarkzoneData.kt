@@ -6,10 +6,9 @@ import com.golfing8.darkzone.module.struct.DarkzoneLevel
 import com.golfing8.darkzone.module.struct.upgrades.LargerBackpackUpgrade
 import com.golfing8.darkzone.module.struct.upgrades.UpgradeType
 import com.golfing8.kcommon.KCommon
-import com.golfing8.kcommon.command.KCommand
 import com.golfing8.kcommon.data.SenderSerializable
+import com.golfing8.kcommon.util.StringUtil
 import org.bukkit.Bukkit
-import kotlin.math.min
 
 /**
  * Contains a player's data relating to the darkzone
@@ -19,7 +18,6 @@ class PlayerDarkzoneData : SenderSerializable() {
     var dzCurrency: Long = 0
     /** How much darkzone XP the player has */
     var darkzoneXP: Long = 0
-        private set
     /** The levels of each upgrade a player has unlocked */
     var upgradeLevels = HashMap<UpgradeType, Int>()
         private set
@@ -80,6 +78,11 @@ class PlayerDarkzoneData : SenderSerializable() {
             totalVault += currency.vaultCurrency
         }
 
+        if (player != null && (totalDZ > 0 || totalVault > 0)) {
+            DarkzoneModule.backpackSoldMsg.send(player,
+                "MONEY", StringUtil.parseMoney(totalVault),
+                "DZ_CURRENCY", StringUtil.parseCommas(totalDZ))
+        }
         backpackContents.clear()
         return CurrencyContainer(totalVault, totalDZ)
     }

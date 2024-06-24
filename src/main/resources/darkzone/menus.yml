@@ -1,10 +1,82 @@
 upgrade-menu:
   size: 27
   title: '&6&lDarkzone Upgrades'
+  locked-item:
+    type: RED_STAINED_GLASS_PANE
+    name: '{UPGRADE_DISPLAY} &7- &c&lLOCKED'
+    lore:
+      - '&7This upgrade requires you to be at least a {LEVEL_NAME}&7!'
+  special-slots:
+    INCREASED_BOSS_DAMAGE:
+      slot: 10
+      type: DIAMOND_SWORD
+      name: '{UPGRADE_DISPLAY}'
+      lore:
+        - '&7Deal extra damage to bosses!'
+        - '&eLevel: &f{CURRENT_LEVEL}'
+        - '&eCost to Upgrade: &f{COST} Dracma'
+    REDUCED_MOB_DAMAGE:
+      slot: 11
+      type: BARRIER
+      name: '{UPGRADE_DISPLAY}'
+      lore:
+        - '&7Take reduced damage from mobs!'
+        - '&eLevel: &f{CURRENT_LEVEL}'
+        - '&eCost to Upgrade: &f{COST} Dracma'
+    INCREASED_MOB_DAMAGE:
+      slot: 12
+      type: GOLD_SWORD
+      name: '{UPGRADE_DISPLAY}'
+      lore:
+        - '&7Deal extra damage to normal darkzone mobs!'
+        - '&eLevel: &f{CURRENT_LEVEL}'
+        - '&eCost to Upgrade: &f{COST} Dracma'
+    MORE_LOOT:
+      slot: 13
+      type: GOLD_INGOT
+      name: '{UPGRADE_DISPLAY}'
+      lore:
+        - '&7Have a greater chance to drop more loot!'
+        - '&eLevel: &f{CURRENT_LEVEL}'
+        - '&eCost to Upgrade: &f{COST} Dracma'
+    LARGER_BACKPACK:
+      slot: 14
+      type: ENDER_CHEST
+      name: '{UPGRADE_DISPLAY}'
+      lore:
+        - '&7Have a larger &1Void Storage &7capacity!'
+        - '&eLevel: &f{CURRENT_LEVEL}'
+        - '&eCost to Upgrade: &f{COST} Dracma'
+    AOE_DAMAGE:
+      slot: 15
+      type: FEATHER
+      name: '{UPGRADE_DISPLAY}'
+      lore:
+        - '&7Deal damage in an area!'
+        - '&eLevel: &f{CURRENT_LEVEL}'
+        - '&eCost to Upgrade: &f{COST} Dracma'
+    AUTO_SELL:
+      slot: 16
+      type: EMERALD
+      name: '{UPGRADE_DISPLAY}'
+      lore:
+        - '&7Contents in your backpack automatically sell!'
+        - '&eLevel: &f{CURRENT_LEVEL}'
+        - '&eCost to Upgrade: &f{COST} Dracma'
 
 backpack-menu:
   size: 36
   title: '&1&lVoid Storage'
+  other-slots:
+    info:
+      slot: 27
+      type: PAPER
+      name: '&1Void Storage Info'
+      lore:
+        - '&7Your void storage is the only thing capable of storing the'
+        - '&7unstable items of the DarkZone!'
+        - ''
+        - '&eCapacity: &f{CAPACITY}'
   special-slots:
     sell:
       slot: 31

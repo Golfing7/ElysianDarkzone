@@ -11,8 +11,9 @@ import org.bukkit.entity.Player
 /**
  * An internal command to force open another player's backpack.
  */
-class DarkzoneBackpackNPCCMD(commandName: String) : MCommand<DarkzoneModule>(DarkzoneModule, commandName, emptyList(), false) {
+class DarkzoneBackpackNPCCMD(commandName: String) : MCommand<DarkzoneModule>(DarkzoneModule, "${commandName}npc", emptyList(), false) {
     override fun onRegister() {
+        description = "Have an NPC open someone else's backpack"
         addArgument("player", CommandArguments.PLAYER)
     }
 

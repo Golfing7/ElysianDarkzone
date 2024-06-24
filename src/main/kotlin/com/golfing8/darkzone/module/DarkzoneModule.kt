@@ -1,6 +1,7 @@
 package com.golfing8.darkzone.module
 
 import com.golfing8.darkzone.module.cmd.DarkzoneCMD
+import com.golfing8.darkzone.module.cmd.currency.CurrencyCMD
 import com.golfing8.darkzone.module.data.PlayerDarkzoneData
 import com.golfing8.darkzone.module.struct.DarkzoneLevel
 import com.golfing8.darkzone.module.struct.CurrencyContainer
@@ -12,6 +13,7 @@ import com.golfing8.kcommon.config.generator.Conf
 import com.golfing8.kcommon.config.lang.LangConf
 import com.golfing8.kcommon.config.lang.Message
 import com.golfing8.kcommon.data.DataManagerContainer
+import com.golfing8.kcommon.hook.placeholderapi.KPlaceholderDefinition
 import com.golfing8.kcommon.module.Module
 import com.golfing8.kcommon.module.ModuleInfo
 import com.golfing8.kcommon.struct.drop.CommandDrop
@@ -21,6 +23,7 @@ import com.golfing8.kcommon.struct.drop.ItemDrop
 import com.golfing8.kcommon.struct.time.Schedule
 import com.golfing8.kcommon.struct.time.ScheduleTask
 import com.golfing8.kcommon.struct.time.Timestamp
+import com.golfing8.kcommon.util.StringUtil
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.Player
@@ -41,8 +44,11 @@ object DarkzoneModule : Module(), DataManagerContainer {
 
     /** Levels mapped from their required XP to the level */
     @Conf
-    private lateinit var levels: HashMap<String, DarkzoneLevel>
+    lateinit var levels: HashMap<String, DarkzoneLevel>
     lateinit var levelsByXP: TreeMap<Long, DarkzoneLevel>
+        private set
+    @Conf
+    lateinit var levelsByLevel: HashMap<Int, DarkzoneLevel>
         private set
 
     @Conf
@@ -67,11 +73,23 @@ object DarkzoneModule : Module(), DataManagerContainer {
     var backpackCommandName = "voidstorage"
         private set
 
+    @Conf
+    var currencyCommandName = "dracma"
+        private set
+
+    @LangConf
+    var backpackSoldMsg = Message(listOf(
+        "&aSold your &1Void Storage &acontents:",
+        "  &a+\${MONEY}",
+        "  &1+{DZ_CURRENCY} Dracma"
+    ))
+        private set
+
     @LangConf
     var upgradeLevelTooLowMsg = Message("&cYour level is too low to purchase that upgrade! It requires level &e{LEVEL}&c!")
         private set
     @LangConf
-    var cantAffordUpgradeMsg = Message("&cYou can't afford this upgrade. It costs &e{COST}&a!")
+    var cantAffordUpgradeMsg = Message("&cYou can't afford this upgrade. It costs &e{COST}&c!")
         private set
     @LangConf
     var boughtUpgradeMsg = Message("&aUpgraded &e{UPGRADE} &afor &e{COST} &adracma!")
@@ -102,11 +120,13 @@ object DarkzoneModule : Module(), DataManagerContainer {
         addSubModule(SpawnerSubModule)
 
         addCommand(DarkzoneCMD())
+        addCommand(CurrencyCMD(currencyCommandName))
 
         UpgradeType.startup()
 
         // Initialize the levels
         levelsByXP = TreeMap()
+        levelsByLevel = HashMap()
         levels.forEach {
             levelsByXP[it.value.xpRequired] = it.value
         }
@@ -114,6 +134,7 @@ object DarkzoneModule : Module(), DataManagerContainer {
         var level = 1
         levelsByXP.forEach {
             it.value.level = level++
+            levelsByLevel[it.value.level] = it.value
         }
 
         // Startup the boss spawning task
@@ -133,6 +154,32 @@ object DarkzoneModule : Module(), DataManagerContainer {
 
         scheduleTask.start()
         addTask(scheduleTask)
+
+        // Register placeholders
+        addPlaceholder(KPlaceholderDefinition("level", "Information about your level")) { p, args ->
+            val data = getOrCreate(p.uniqueId, PlayerDarkzoneData::class.java)
+            data.getLevel().displayName
+        }
+        addPlaceholder(KPlaceholderDefinition("level_number", "Information about your level")) { p, args ->
+            val data = getOrCreate(p.uniqueId, PlayerDarkzoneData::class.java)
+            data.getLevel().level.toString()
+        }
+        addPlaceholder(KPlaceholderDefinition("currency", "The amount of the darkzone currency a player has")) {p, args ->
+            val data = getOrCreate(p.uniqueId, PlayerDarkzoneData::class.java)
+            StringUtil.parseCommas(data.dzCurrency.toString())
+        }
+        addPlaceholder(KPlaceholderDefinition("xp", "The amount of XP you have")) { p, args ->
+            val data = getOrCreate(p.uniqueId, PlayerDarkzoneData::class.java)
+            StringUtil.parseCommas(data.darkzoneXP)
+        }
+        addPlaceholder(KPlaceholderDefinition("backpack_capacity", "Capacity of your backpack")) { p, args ->
+            val data = getOrCreate(p.uniqueId, PlayerDarkzoneData::class.java)
+            StringUtil.parseCommas(data.getBackpackSize())
+        }
+        addPlaceholder(KPlaceholderDefinition("backpack_contents", "Amount of items in your backpack")) { p, args ->
+            val data = getOrCreate(p.uniqueId, PlayerDarkzoneData::class.java)
+            StringUtil.parseCommas(data.getBackpackItemCount())
+        }
     }
 
     override fun onDisable() {
