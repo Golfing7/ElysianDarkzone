@@ -26,6 +26,16 @@ class PlayerDarkzoneData : SenderSerializable() {
         private set
 
     /**
+     * Takes the given amount of items from the backpack
+     *
+     * @param type the type of item to take
+     * @param amount the amount of the item to take
+     */
+    fun takeItems(type: String, amount: Int) {
+        backpackContents.computeIfPresent(type) { _, v -> v - amount}
+    }
+
+    /**
      * Gets the total amount of items in the player's backpack.
      *
      * @return the amount of items in the player's backpack.
@@ -70,12 +80,12 @@ class PlayerDarkzoneData : SenderSerializable() {
         var totalDZ = 0
         var totalVault = 0.0
         for (entry in backpackContents) {
-            val currency = DarkzoneModule.itemWorths[entry.key] ?: continue
-            dzCurrency += currency.darkzoneCurrency
-            KCommon.getInstance().economy.depositPlayer(Bukkit.getOfflinePlayer(playerUUID), currency.vaultCurrency)
+            val currency = DarkzoneModule.itemDefinitions[entry.key] ?: continue
+            dzCurrency += currency.sellValue.darkzoneCurrency
+            KCommon.getInstance().economy.depositPlayer(Bukkit.getOfflinePlayer(playerUUID), currency.sellValue.vaultCurrency)
 
-            totalDZ += currency.darkzoneCurrency
-            totalVault += currency.vaultCurrency
+            totalDZ += currency.sellValue.darkzoneCurrency
+            totalVault += currency.sellValue.vaultCurrency
         }
 
         if (player != null && (totalDZ > 0 || totalVault > 0)) {

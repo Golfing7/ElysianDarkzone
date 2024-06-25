@@ -39,6 +39,9 @@ abstract class IncreasedDamageUpgrade(type: UpgradeType) : Upgrade(type) {
         if (!worksOn(livingEntity))
             return
 
+        if (damageIncrease.get(level.toDouble()) == null)
+            return
+
         event.damage *= damageIncrease.get(level.toDouble())!!.b
     }
 

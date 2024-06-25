@@ -24,7 +24,10 @@ levels:
     display-name: 'Void Master'
 
 # Use the same keys here from the drop-tables section in entities.yml
-item-worths:
+item-definitions:
   'enderpearl':
-    vault-currency: 500.0
-    darkzone-currency: 10
+    item:
+      type: ENDER_PEARL
+    sell-value:
+      vault-currency: 500.0
+      darkzone-currency: 10

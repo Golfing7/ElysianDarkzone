@@ -5,6 +5,7 @@ import com.golfing8.darkzone.module.cmd.currency.CurrencyCMD
 import com.golfing8.darkzone.module.data.PlayerDarkzoneData
 import com.golfing8.darkzone.module.struct.DarkzoneLevel
 import com.golfing8.darkzone.module.struct.CurrencyContainer
+import com.golfing8.darkzone.module.struct.DarkzoneItem
 import com.golfing8.darkzone.module.struct.DarkzoneRegion
 import com.golfing8.darkzone.module.struct.upgrades.UpgradeType
 import com.golfing8.darkzone.module.sub.EntitySubModule
@@ -23,6 +24,7 @@ import com.golfing8.kcommon.struct.drop.ItemDrop
 import com.golfing8.kcommon.struct.time.Schedule
 import com.golfing8.kcommon.struct.time.ScheduleTask
 import com.golfing8.kcommon.struct.time.Timestamp
+import com.golfing8.kcommon.util.PlayerUtil
 import com.golfing8.kcommon.util.StringUtil
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -52,7 +54,7 @@ object DarkzoneModule : Module(), DataManagerContainer {
         private set
 
     @Conf
-    lateinit var itemWorths: HashMap<String, CurrencyContainer>
+    lateinit var itemDefinitions: HashMap<String, DarkzoneItem>
 
     @Conf
     private var keepRegionChunksLoaded = true
@@ -68,6 +70,10 @@ object DarkzoneModule : Module(), DataManagerContainer {
         Timestamp.ofIntraDay(18, 0, 0),
         Timestamp.ofIntraDay(21, 0, 0),
     ))
+
+    @Conf
+    var backpackRightClickTakeAmount = 64
+        private set
 
     @Conf
     var darkzoneCommandName = "darkzone"
@@ -87,6 +93,10 @@ object DarkzoneModule : Module(), DataManagerContainer {
         "  &a+\${MONEY}",
         "  &1+{DZ_CURRENCY} Dracma"
     ))
+        private set
+
+    @LangConf
+    var rareDropMsg = Message("&a&lRARE DROP! {DROP}")
         private set
 
     @LangConf
@@ -251,12 +261,20 @@ object DarkzoneModule : Module(), DataManagerContainer {
             } else if (it is ItemDrop) {
                 var totalLost = 0
                 for (entry in it.items) {
-                    totalLost += playerData.addItemToBackpack(it._key, entry.value.buildFromTemplate().amount)
+                    val itemLost = playerData.addItemToBackpack(it._key, entry.value.buildFromTemplate().amount)
+                    if (itemLost > 0) {
+                        totalLost += itemLost
+                        PlayerUtil.givePlayerItemSafe(player, itemDefinitions[entry.key]!!.item.buildFromTemplate())
+                    }
                 }
 
                 if (totalLost > 0) {
                     dropsLostMsg.send(player,
                         "AMOUNT_LOST", totalLost)
+                }
+
+                if (it.displayName != null) {
+                    rareDropMsg.send(player, "DROP", it.displayName)
                 }
             }
         }

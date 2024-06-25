@@ -40,6 +40,15 @@ abstract class Upgrade(val type: UpgradeType) : Listener, ConfigClass() {
     open fun disable() {}
 
     /**
+     * Gets the max level of this upgrade.
+     *
+     * @return the max level.
+     */
+    fun getMaxLevel(): Int {
+        return upgradeCosts.lastEntry().key
+    }
+
+    /**
      * Gets the level of this upgrade the player has unlocked.
      *
      * @param player the player.

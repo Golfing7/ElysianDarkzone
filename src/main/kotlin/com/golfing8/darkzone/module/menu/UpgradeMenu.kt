@@ -33,21 +33,27 @@ class UpgradeMenu(player: Player) : PlayerMenuContainer(player) {
             if (playerData.getLevel().level < type.get().levelRequired) {
                 val current = builder.getSpecialItem(type.name)
                 builder.setSpecialItem(type.name, SimpleGUIItem(lockedItem, current.slot))
-                builder.specialPlaceholders(type.name, Placeholder.compileCurly(
+                builder.specialPlaceholders(type.name) { Placeholder.compileCurly(
                     "UPGRADE_DISPLAY", type.get().displayName,
                     "LEVEL", type.get().levelRequired,
                     "LEVEL_NAME", DarkzoneModule.levelsByLevel[type.get().levelRequired]!!.displayName
-                ))
+                )}
                 builder.bindTo(type.name) {}
                 return@forEach
             }
-            builder.specialPlaceholders(type.name, Placeholder.compileCurly(
-                "COST", type.get().upgradeCosts[currentLevel + 1] ?: "N/A",
-                "CURRENT_LEVEL", currentLevel,
-                "UPGRADE_DISPLAY", type.get().displayName
-            ))
+            builder.specialPlaceholders(type.name) {
+                Placeholder.compileCurly(
+                    "COST", type.get().upgradeCosts[currentLevel + 1] ?: "N/A",
+                    "CURRENT_LEVEL", currentLevel,
+                    "UPGRADE_DISPLAY", type.get().displayName
+                )
+            }
             builder.bindTo(type.name) {
                 val cost = type.get().upgradeCosts[currentLevel + 1] ?: return@bindTo
+
+                if (playerData.upgradeLevels.getOrDefault(type, 0) >= type.get().getMaxLevel()) {
+                    return@bindTo
+                }
 
                 if (type.get().levelRequired > playerData.getLevel().level) {
                     DarkzoneModule.upgradeLevelTooLowMsg.send(player)
@@ -68,7 +74,7 @@ class UpgradeMenu(player: Player) : PlayerMenuContainer(player) {
                 DarkzoneModule.boughtUpgradeMsg.send(player,
                     "COST", StringUtil.parseCommas(cost),
                     "UPGRADE", type.get().displayName)
-                UpgradeMenu(player).open()
+                refresh()
             }
         }
 
