@@ -9,6 +9,7 @@ import com.golfing8.kcommon.command.MCommand
 class CurrencyCMD(name: String) : MCommand<DarkzoneModule>(DarkzoneModule, name, listOf(), false) {
     override fun onRegister() {
         description = "Main currency command"
+        commandPermission = generatedCommandPermission
 
         addSubCommand(CurrencyBalanceCMD())
         addSubCommand(CurrencySetCMD())

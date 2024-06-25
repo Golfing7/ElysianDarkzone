@@ -14,6 +14,7 @@ import org.bukkit.entity.Player
 class DarkzoneBackpackNPCCMD(commandName: String) : MCommand<DarkzoneModule>(DarkzoneModule, "${commandName}npc", emptyList(), false) {
     override fun onRegister() {
         description = "Have an NPC open someone else's backpack"
+        commandPermission = generatedCommandPermission
         addArgument("player", CommandArguments.PLAYER)
     }
 

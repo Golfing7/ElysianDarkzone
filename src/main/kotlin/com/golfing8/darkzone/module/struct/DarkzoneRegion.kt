@@ -12,16 +12,19 @@ import org.bukkit.Location
 class DarkzoneRegion : CASerializable {
     var levelRequirement = 0
     lateinit var region: Region
-    private lateinit var bossSpawnLocation: Location
-    private lateinit var potentialBossSpawns: WeightedCollection<String>
+    private var bossSpawnLocation: Location? = null
+    private var potentialBossSpawns: WeightedCollection<String>? = null
 
     /**
      * Spawns a boss in this region.
      */
-    fun spawnBoss(): DarkzoneBossWrapper {
-        val typeID = potentialBossSpawns.get()
+    fun spawnBoss(): DarkzoneBossWrapper? {
+        if (potentialBossSpawns == null || bossSpawnLocation == null)
+            return null
+
+        val typeID = potentialBossSpawns!!.get()
         val bossType = EntitySubModule.bosses[typeID] ?: throw IllegalArgumentException("Boss $typeID doesn't exist.")
 
-        return EntitySubModule.spawnBoss(bossSpawnLocation, bossType)
+        return EntitySubModule.spawnBoss(bossSpawnLocation!!, bossType)
     }
 }

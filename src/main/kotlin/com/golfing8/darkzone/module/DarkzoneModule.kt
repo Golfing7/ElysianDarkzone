@@ -70,6 +70,10 @@ object DarkzoneModule : Module(), DataManagerContainer {
     ))
 
     @Conf
+    var darkzoneCommandName = "darkzone"
+        private set
+
+    @Conf
     var backpackCommandName = "voidstorage"
         private set
 
@@ -119,7 +123,7 @@ object DarkzoneModule : Module(), DataManagerContainer {
         addSubModule(EntitySubModule)
         addSubModule(SpawnerSubModule)
 
-        addCommand(DarkzoneCMD())
+        addCommand(DarkzoneCMD(darkzoneCommandName))
         addCommand(CurrencyCMD(currencyCommandName))
 
         UpgradeType.startup()
