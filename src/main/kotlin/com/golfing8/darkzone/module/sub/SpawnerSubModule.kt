@@ -12,6 +12,7 @@ import com.golfing8.shade.com.cryptomorin.xseries.XMaterial
 import de.tr7zw.kcommon.nbtapi.NBT
 import org.bukkit.NamespacedKey
 import org.bukkit.block.CreatureSpawner
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -114,5 +115,7 @@ object SpawnerSubModule : SubModule<DarkzoneModule>() {
 
         // Try spawning an entity at that location
         EntitySubModule.adaptEntity(event.entity as LivingEntity, entityData)
+        if (entityData.overrideAI)
+            (event.entity as CraftEntity).handle.fromMobSpawner = false
     }
 }

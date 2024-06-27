@@ -14,6 +14,8 @@ import com.golfing8.kcommon.config.generator.Conf
 import com.golfing8.kcommon.config.lang.LangConf
 import com.golfing8.kcommon.config.lang.Message
 import com.golfing8.kcommon.data.DataManagerContainer
+import com.golfing8.kcommon.event.FancyItemPostPickupEvent
+import com.golfing8.kcommon.event.FancyItemPrePickupEvent
 import com.golfing8.kcommon.hook.placeholderapi.KPlaceholderDefinition
 import com.golfing8.kcommon.module.Module
 import com.golfing8.kcommon.module.ModuleInfo
@@ -222,6 +224,17 @@ object DarkzoneModule : Module(), DataManagerContainer {
         }
     }
 
+    @EventHandler
+    fun onFancyPickup(event: FancyItemPrePickupEvent) {
+        if (!event.itemDrop.metadata.containsKey("elysiandarkzone_itemdrop"))
+            return
+
+        val droppedBy = event.itemDrop.spawnedBy ?: return
+        val playerData = getOrCreate(event.player.uniqueId, PlayerDarkzoneData::class.java)
+        playerData.addItemToBackpack(droppedBy._key, event.itemPickedUp.amount)
+        event.isItemConsumed = true
+    }
+
     /**
      * Checks if the given location is within a darkzone area.
      *
@@ -251,30 +264,39 @@ object DarkzoneModule : Module(), DataManagerContainer {
      *
      * @param player the player.
      * @param table the drop table to use.
+     * @param dropLocation the location for the drops to generate.
      */
-    fun generateDropsToBackpack(player: Player, table: DropTable, context: DropContext = DropContext.DEFAULT) {
+    fun generateDropsToBackpack(player: Player, table: DropTable, dropLocation: Location, context: DropContext = DropContext.DEFAULT) {
         val playerData = getOrCreate(player.uniqueId, PlayerDarkzoneData::class.java)
         val drops = table.generateDrops(context)
         drops.forEach {
-            if (it is CommandDrop) {
-                it.giveTo(player)
-            } else if (it is ItemDrop) {
-                var totalLost = 0
-                for (entry in it.items) {
-                    val itemLost = playerData.addItemToBackpack(it._key, entry.value.buildFromTemplate().amount)
-                    if (itemLost > 0) {
-                        totalLost += itemLost
-                        PlayerUtil.givePlayerItemSafe(player, itemDefinitions[entry.key]!!.item.buildFromTemplate())
+            when (it) {
+                is CommandDrop -> it.giveTo(player)
+                is ItemDrop -> {
+                    // If the drop is fancy, let it be handled normally.
+                    if (it.isFancyDrop) {
+                        val fancyDrop = it.dropFancy(DropContext(player, context.boost), dropLocation)
+                        fancyDrop.metadata["elysiandarkzone_itemdrop"] = true
+                    } else {
+                        var totalLost = 0
+                        for (entry in it.items) {
+                            val itemLost = playerData.addItemToBackpack(it._key, entry.value.buildFromTemplate().amount)
+                            if (itemLost > 0) {
+                                totalLost += itemLost
+                                PlayerUtil.givePlayerItemSafe(player, itemDefinitions[entry.key]!!.item.buildFromTemplate())
+                            }
+                        }
+
+
+                        if (totalLost > 0) {
+                            dropsLostMsg.send(player,
+                                "AMOUNT_LOST", totalLost)
+                        }
                     }
-                }
 
-                if (totalLost > 0) {
-                    dropsLostMsg.send(player,
-                        "AMOUNT_LOST", totalLost)
-                }
-
-                if (it.displayName != null) {
-                    rareDropMsg.send(player, "DROP", it.displayName)
+                    if (it.displayName != null) {
+                        rareDropMsg.send(player, "DROP", it.displayName)
+                    }
                 }
             }
         }

@@ -12,6 +12,7 @@ import com.golfing8.kcommon.config.generator.Conf
 import com.golfing8.kcommon.module.SubModule
 import org.bukkit.Location
 import org.bukkit.NamespacedKey
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity
 import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.EventHandler
@@ -74,6 +75,8 @@ object EntitySubModule : SubModule<DarkzoneModule>() {
      */
     fun spawnBoss(location: Location, boss: DarkzoneBoss): DarkzoneBossWrapper {
         val spawned = boss.entityDefinition.spawnEntity(location)
+        if (boss.overrideAI)
+            (spawned as CraftEntity).handle.fromMobSpawner = false
         val wrapper = DarkzoneBossWrapper(boss, spawned as LivingEntity)
         livingBosses[spawned] = wrapper
         return wrapper

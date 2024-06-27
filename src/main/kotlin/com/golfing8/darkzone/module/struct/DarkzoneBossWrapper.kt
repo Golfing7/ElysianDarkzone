@@ -53,7 +53,7 @@ class DarkzoneBossWrapper(val bossData: DarkzoneBoss, val entity: LivingEntity) 
             playerData.grantXP(totalXP.toLong())
 
             if (damageRatio * 100.0 > bossData.minimumDamagePercentageForDrops && entry.key.isOnline)
-                DarkzoneModule.generateDropsToBackpack(entry.key, bossData.entityDefinition.dropTable!!)
+                DarkzoneModule.generateDropsToBackpack(entry.key, bossData.entityDefinition.dropTable!!, this.entity.location)
         }
     }
 }

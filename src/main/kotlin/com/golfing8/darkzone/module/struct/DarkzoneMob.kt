@@ -18,6 +18,7 @@ class DarkzoneMob : CASerializable {
     lateinit var _key: String
     lateinit var entityDefinition: EntityDefinition
         private set
+    var overrideAI = false
     var xpPerKill = 0
 
     /**
@@ -41,7 +42,7 @@ class DarkzoneMob : CASerializable {
         if (entity.killer == null)
             return
 
-        DarkzoneModule.generateDropsToBackpack(entity.killer, this.entityDefinition.dropTable!!, deathEvent.dropContext)
+        DarkzoneModule.generateDropsToBackpack(entity.killer, this.entityDefinition.dropTable!!, entity.location, deathEvent.dropContext)
         val playerData = DarkzoneModule.getOrCreate(entity.killer.uniqueId, PlayerDarkzoneData::class.java)
         playerData.grantXP(xpPerKill.toLong())
     }
