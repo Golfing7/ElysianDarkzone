@@ -82,19 +82,6 @@ object EntitySubModule : SubModule<DarkzoneModule>() {
         return wrapper
     }
 
-    /**
-     * Tries to naturally spawn an entity at the given location.
-     *
-     * @param loc the location to spawn the entity near to.
-     * @return the spawned entity, or null if the entity cannot be spawned there.
-     */
-    fun trySpawnEntity(loc: Location, definition: DarkzoneMob): LivingEntity? {
-        val createdEntity = definition.entityDefinition.trySpawnNaturallyAt(loc) ?: return null
-
-        createdEntity.persistentDataContainer.set(customEntityKey, PersistentDataType.STRING, definition._key)
-        return createdEntity
-    }
-
     fun adaptEntity(livingEntity: LivingEntity, definition: DarkzoneMob) {
         definition.entityDefinition.applyToEntity(livingEntity)
         livingEntity.persistentDataContainer.set(customEntityKey, PersistentDataType.STRING, definition._key)

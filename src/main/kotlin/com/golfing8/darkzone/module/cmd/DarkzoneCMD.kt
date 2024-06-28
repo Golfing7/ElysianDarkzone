@@ -21,5 +21,6 @@ class DarkzoneCMD(commandName: String) : MCommand<DarkzoneModule>(DarkzoneModule
         addSubCommand(DarkzoneMainMenuCMD())
         addSubCommand(DarkzoneLevelCMD())
         addSubCommand(DarkzoneSetXPCMD())
+        addSubCommand(DarkzoneSpawnEntityCMD())
     }
 }
