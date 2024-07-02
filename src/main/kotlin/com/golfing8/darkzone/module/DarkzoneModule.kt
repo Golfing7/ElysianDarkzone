@@ -51,7 +51,6 @@ object DarkzoneModule : Module(), DataManagerContainer {
     lateinit var levels: HashMap<String, DarkzoneLevel>
     lateinit var levelsByXP: TreeMap<Long, DarkzoneLevel>
         private set
-    @Conf
     lateinit var levelsByLevel: HashMap<Int, DarkzoneLevel>
         private set
 

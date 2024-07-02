@@ -12,7 +12,7 @@ class DarkzoneBackpackCMD(commandName: String) : MCommand<DarkzoneModule>(Darkzo
     override fun onRegister() {
         description = "Open your backpack"
         commandPermission = generatedCommandPermission
-        addArgument("player", CommandArguments.PLAYER, CommandSender::getName)
+        addArgument("player", CommandArguments.PLAYER, CommandSender::getName).requiredPermissionExtension = "other"
     }
 
     override fun execute(context: CommandContext) {
