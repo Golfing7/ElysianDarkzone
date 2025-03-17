@@ -46,8 +46,8 @@ class AOEDamageUpgrade(type: UpgradeType) : Upgrade(type) {
         if (!DarkzoneModule.inDarkzoneArea(attacker.location))
             return
 
-        val range = this.range[level.toDouble()]!!.b
-        val damageRatio = this.damageRatio[level.toDouble()]!!.b
+        val range = this.range[level.toDouble()]!!
+        val damageRatio = this.damageRatio[level.toDouble()]!!
         val attackDamage = event.damage * damageRatio
 
         // Find all nearby entities and damage them!

@@ -81,7 +81,7 @@ object SpawnerSubModule : SubModule<DarkzoneModule>() {
         module.addTask {
             val blockAtLocation = event.block.location.block
             val blockMeta = blockAtLocation.state as? CreatureSpawner ?: return@addTask
-            blockMeta.spawnedType = entityDefinition.entityDefinition.type.entityType
+            blockMeta.spawnedType = entityDefinition.entityDefinition.entityType.entityType
             blockMeta.persistentDataContainer.set(customSpawnerKey, PersistentDataType.STRING, entityDefinition._key)
             blockMeta.update()
         }.startLater(1L)

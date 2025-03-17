@@ -42,7 +42,7 @@ abstract class IncreasedDamageUpgrade(type: UpgradeType) : Upgrade(type) {
         if (damageIncrease.get(level.toDouble()) == null)
             return
 
-        event.damage *= damageIncrease.get(level.toDouble())!!.b
+        event.damage *= damageIncrease.get(level.toDouble())!!
     }
 
     abstract fun worksOn(entity: LivingEntity): Boolean

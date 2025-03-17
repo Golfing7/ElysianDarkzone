@@ -34,6 +34,6 @@ class LargerBackpackUpgrade(type: UpgradeType) : Upgrade(type) {
     }
 
     fun getBackpackSize(level: Int): Int {
-        return backpackSize[level.toDouble()]!!.b.toInt()
+        return backpackSize[level.toDouble()]!!.toInt()
     }
 }

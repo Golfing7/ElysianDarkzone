@@ -23,6 +23,6 @@ class MoreLootUpgrade(type: UpgradeType) : Upgrade(type) {
         if (level <= 0)
             return
 
-        event.dropContext = DropContext(killer, dropChanceModifier[level.toDouble()]!!.b)
+        event.dropContext = DropContext(killer, dropChanceModifier[level.toDouble()]!!)
     }
 }

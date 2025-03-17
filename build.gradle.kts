@@ -2,6 +2,7 @@ plugins {
     kotlin("jvm") version "1.9.23"
 }
 
+val libraryFolder = "locallibs"
 val deployDirectory = "C:\\Users\\Miner\\DoomPvP\\plugins"
 group = "com.golfing8"
 version = "1.0"
@@ -9,6 +10,13 @@ version = "1.0"
 repositories {
     mavenCentral()
     mavenLocal()
+
+    flatDir {
+        dir(rootDir.resolve(libraryFolder))
+    }
+
+    maven("https://jitpack.io")
+    maven("https://repo.papermc.io/repository/maven-public/")
 }
 
 dependencies {

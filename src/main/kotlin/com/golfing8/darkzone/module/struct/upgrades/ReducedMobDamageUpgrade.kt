@@ -28,7 +28,7 @@ class ReducedMobDamageUpgrade(type: UpgradeType) : Upgrade(type) {
         if (level <= 0)
             return
 
-        val reduction = damageReductionMod[level.toDouble()]!!.b
+        val reduction = damageReductionMod[level.toDouble()]!!
         event.damage *= reduction
     }
 }
