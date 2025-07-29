@@ -13,7 +13,7 @@ entities:
   'enderman-1':
     xp-per-kill: 5
     entity-definition:
-      type: ENDERMAN
+      entity-type: ENDERMAN
       name: '&0&lEnderman &8- &6Lvl. 1'
       max-health: 100.0
       spawn-health: 100.0
@@ -21,7 +21,7 @@ entities:
   'enderman-2':
     xp-per-kill: 10
     entity-definition:
-      type: ENDERMAN
+      entity-type: ENDERMAN
       name: '&0&lEnderman &8- &6Lvl. 2'
       max-health: 150.0
       spawn-health: 150.0
@@ -29,15 +29,18 @@ entities:
   'enderman-3':
     xp-per-kill: 20
     entity-definition:
-      type: ENDERMAN
+      entity-type: ENDERMAN
       name: '&0&lEnderman &8- &6Lvl. 3'
       max-health: 250.0
-      spawn-health: 150.0
+      spawn-health: 250.0
       drop-table: 'drop-tables.enderman-simple'
 
 bosses:
   'enderman-boss':
     xp-per-kill: 500
     entity-definition:
-
+      entity-type: ENDERMAN
+      name: '&0&lEnderman &8- &6&lBOSS'
+      max-health: 1000.0
+      spawn-health: 1000.0
 
