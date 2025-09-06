@@ -24,7 +24,7 @@ dependencies {
     testImplementation(kotlin("test"))
 
     compileOnly("net.techcable.tacospigot:WineSpigot:1.8.8-R0.2-SNAPSHOT")
-    compileOnly("com.golfing8:KCommon:1.0")
+    compileOnly("com.golfing8:KCommon:1.1")
     compileOnly("com.github.MilkBowl:VaultAPI:1.7")
 }
 

@@ -26,7 +26,7 @@ class DarkzoneLevelCMD : MCommand<DarkzoneModule>() {
     }
 
     override fun execute(context: CommandContext) {
-        val target = if (checkPermissionExtension(context.sender, "other"))
+        val target = if (hasPermission(context.sender, "other"))
             Bukkit.getPlayer(context.arguments[0])
         else
             context.player

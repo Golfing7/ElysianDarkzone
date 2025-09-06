@@ -22,7 +22,7 @@ class AutoSellUpgrade(type: UpgradeType) : Upgrade(type) {
     override fun enable() {
         super.enable()
 
-        DarkzoneModule.addTask {
+        DarkzoneModule.addTask(Runnable {
             for (player in Bukkit.getOnlinePlayers()) {
                 val playerData = DarkzoneModule.getOrCreate(player.uniqueId, PlayerDarkzoneData::class.java)
                 val playerLevel = getLevel(player)
@@ -32,6 +32,6 @@ class AutoSellUpgrade(type: UpgradeType) : Upgrade(type) {
 
                 playerData.sellBackpackContents()
             }
-        }.startTimer(0L, 20L)
+        }).startTimer(0L, 20L)
     }
 }

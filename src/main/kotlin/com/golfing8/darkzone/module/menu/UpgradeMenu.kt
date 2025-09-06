@@ -23,9 +23,9 @@ class UpgradeMenu(player: Player) : PlayerMenuContainer(player) {
 
     override fun loadMenu(): Menu {
         val playerData = DarkzoneModule.getOrCreate(player.uniqueId, PlayerDarkzoneData::class.java)
-        val lockedItem = ItemStackBuilder(section.getConfigurationSection("locked-item"))
+        val lockedItem = ItemStackBuilder(section!!.getConfigurationSection("locked-item"))
         val builder = MenuBuilder(section)
-        builder.globalPlaceholders(Placeholder.curly(
+        builder.globalPlaceholders(Placeholder.curlyTrusted(
             "BALANCE", StringUtil.parseCommas(playerData.dzCurrency)
         ))
         UpgradeType.entries.forEach { type ->
@@ -33,7 +33,7 @@ class UpgradeMenu(player: Player) : PlayerMenuContainer(player) {
             if (playerData.getLevel().level < type.get().levelRequired) {
                 val current = builder.getSpecialItem(type.name)
                 builder.setSpecialItem(type.name, SimpleGUIItem(lockedItem, current.slot))
-                builder.specialPlaceholders(type.name) { Placeholder.compileCurly(
+                builder.specialPlaceholders(type.name) { Placeholder.compileCurlyTrusted(
                     "UPGRADE_DISPLAY", type.get().displayName,
                     "LEVEL", type.get().levelRequired,
                     "LEVEL_NAME", DarkzoneModule.levelsByLevel[type.get().levelRequired]!!.displayName
@@ -42,7 +42,7 @@ class UpgradeMenu(player: Player) : PlayerMenuContainer(player) {
                 return@forEach
             }
             builder.specialPlaceholders(type.name) {
-                Placeholder.compileCurly(
+                Placeholder.compileCurlyTrusted(
                     "COST", type.get().upgradeCosts[currentLevel + 1] ?: "N/A",
                     "CURRENT_LEVEL", currentLevel,
                     "UPGRADE_DISPLAY", type.get().displayName

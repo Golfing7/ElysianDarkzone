@@ -48,7 +48,7 @@ object SpawnerSubModule : SubModule<DarkzoneModule>() {
      * @return the generated item.
      */
     fun generateSpawnerItem(definition: DarkzoneMob): ItemStack {
-        spawnerItemFormat.placeholders(Placeholder.curly("ENTITY", definition._key))
+        spawnerItemFormat.placeholders(Placeholder.curlyTrusted("ENTITY", definition._key))
         val item = spawnerItemFormat.buildFromTemplate()
         NBT.modify(item) {
             it.setString(CUSTOM_SPAWNER_ITEM_KEY, definition._key)
@@ -78,13 +78,13 @@ object SpawnerSubModule : SubModule<DarkzoneModule>() {
         val placedItem = event.itemInHand
         val entityDefinition = getEntityDefinitionFromSpawnerItem(placedItem) ?: return
 
-        module.addTask {
+        module.addTask(Runnable {
             val blockAtLocation = event.block.location.block
-            val blockMeta = blockAtLocation.state as? CreatureSpawner ?: return@addTask
+            val blockMeta = blockAtLocation.state as? CreatureSpawner ?: return@Runnable
             blockMeta.spawnedType = entityDefinition.entityDefinition.entityType.entityType
             blockMeta.persistentDataContainer.set(customSpawnerKey, PersistentDataType.STRING, entityDefinition._key)
             blockMeta.update()
-        }.startLater(1L)
+        }).startLater(1L)
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
@@ -97,9 +97,9 @@ object SpawnerSubModule : SubModule<DarkzoneModule>() {
         val customSpawner = darkzoneSpawners[key] ?: return
 
         // Apply next spawn tick delay
-        module.addTask {
+        module.addTask(Runnable {
             event.spawner.delay = customSpawner.ticksPerSpawn.randomI
-        }.start()
+        }).start()
 
         val entityData = EntitySubModule.entities[customSpawner._key] ?: return
 

@@ -21,7 +21,7 @@ class BackpackMenu(player: Player, private val targetPlayer: Player, private val
     override fun loadMenu(): Menu {
         val targetData = DarkzoneModule.getOrCreate(targetPlayer.uniqueId, PlayerDarkzoneData::class.java)
         val builder = MenuBuilder(section)
-        builder.globalPlaceholders(Placeholder.curly("CAPACITY", StringUtil.parseCommas(targetData.getBackpackSize())))
+        builder.globalPlaceholders(Placeholder.curlyTrusted("CAPACITY", StringUtil.parseCommas(targetData.getBackpackSize())))
         if (canSell) {
             builder.bindTo("sell") {
                 targetData.sellBackpackContents()
@@ -46,7 +46,7 @@ class BackpackMenu(player: Player, private val targetPlayer: Player, private val
                 getMenu().refreshSpecialItems()
             }
             builder.specialPlaceholders(item) {
-                Placeholder.compileCurly(
+                Placeholder.compileCurlyTrusted(
                     "TOTAL", targetData.backpackContents[item] ?: 0
                 )
             }

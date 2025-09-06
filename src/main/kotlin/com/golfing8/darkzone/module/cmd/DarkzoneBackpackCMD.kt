@@ -16,12 +16,12 @@ class DarkzoneBackpackCMD(commandName: String) : MCommand<DarkzoneModule>(Darkzo
     }
 
     override fun execute(context: CommandContext) {
-        val target = if (checkPermissionExtension(context.sender, "other"))
+        val target = if (hasPermission(context.sender, "other"))
             context.next()
         else
             context.player!!
 
-        BackpackMenu(context.player!!, target, checkPermissionExtension(context.player, "sell-anywhere"))
+        BackpackMenu(context.player!!, target, hasPermission(context.player, "sell-anywhere"))
             .open()
     }
 }
