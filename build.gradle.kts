@@ -1,10 +1,9 @@
 plugins {
     kotlin("jvm") version "1.9.23"
-    id("com.gradleup.shadow") version("8.3.6")
 }
 
 val libraryFolder = "locallibs"
-val deployDirectory = "C:\\Users\\Miner\\DoomPvP\\plugins"
+val deployDirectory = "${System.getProperty("user.home")}/Servers/DoomPvP/plugins"
 group = "com.golfing8"
 version = "1.0"
 
@@ -36,10 +35,10 @@ kotlin {
 }
 
 tasks.create("deploy") {
-    dependsOn(tasks.shadowJar)
+    dependsOn(tasks.jar)
 
     doFirst {
-        val outputFile = tasks.getByName("shadowJar").outputs.files.first()
+        val outputFile = tasks.getByName("jar").outputs.files.first()
         val targetFile = File(deployDirectory, "${project.name}-${project.version}.jar")
 
         outputFile.copyTo(targetFile, overwrite = true)

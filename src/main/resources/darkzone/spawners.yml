@@ -3,3 +3,15 @@ darkzone-spawners:
     ticks-per-spawn: '200;800'
     max-of-type-nearby: 8
     nearby-range: 32.0
+  'enderman-2':
+    ticks-per-spawn: '200;800'
+    max-of-type-nearby: 8
+    nearby-range: 32.0
+  'enderman-3':
+    ticks-per-spawn: '200;800'
+    max-of-type-nearby: 8
+    nearby-range: 32.0
+  'link':
+    ticks-per-spawn: '200;800'
+    max-of-type-nearby: 8
+    nearby-range: 32.0
